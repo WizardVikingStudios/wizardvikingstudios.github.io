@@ -227,6 +227,28 @@
     .button { transition: none; }
   }
 </style>
+
+<!-- Google Analytics 4 (property tappy-cat-revenue, web stream "Wizard Viking Studios site").
+     Consent Mode v2 defaults to denied, so GA4 sends cookieless pings: page views and
+     store-button clicks are counted, but no analytics or advertising cookie is set and
+     nothing is used for ad targeting. That keeps this page out of cookie-banner territory
+     for EU/UK visitors while still answering the only question it needs to answer:
+     how many people arrive, and how many tap through to a store. -->
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('consent', 'default', {
+    ad_storage: 'denied',
+    ad_user_data: 'denied',
+    ad_personalization: 'denied',
+    analytics_storage: 'denied',
+    functionality_storage: 'granted',
+    security_storage: 'granted'
+  });
+  gtag('js', new Date());
+  gtag('config', 'G-XJ2EF0B4PF', { anonymize_ip: true });
+</script>
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XJ2EF0B4PF"></script>
 </head>
 <body>
 
@@ -261,11 +283,11 @@
             <li><b>Offline</b> no Wi-Fi needed</li>
           </ul>
           <div class="buttons">
-            <a class="button" href="https://play.google.com/store/apps/details?id=com.WizardViking.tappycat">
+            <a class="button" data-store="google_play" href="https://play.google.com/store/apps/details?id=com.WizardViking.tappycat">
               <svg width="22" height="24" viewBox="0 0 22 24" aria-hidden="true"><path d="M2 1.5v21L20 12z" fill="#fff" stroke="#33200f" stroke-width="2" stroke-linejoin="round"/></svg>
               Get it on Google Play
             </a>
-            <a class="button ios" href="https://apps.apple.com/app/id6826475453">
+            <a class="button ios" data-store="app_store" href="https://apps.apple.com/app/id6826475453">
               <svg width="18" height="26" viewBox="0 0 18 26" aria-hidden="true"><rect x="1.5" y="1.5" width="15" height="23" rx="3" fill="#fff" stroke="#33200f" stroke-width="2"/><rect x="4.5" y="5" width="9" height="13" fill="#86cbee"/><circle cx="9" cy="21" r="1.4" fill="#33200f"/></svg>
               Download on the App Store
             </a>
@@ -298,5 +320,18 @@
   </div>
 </footer>
 
+<!-- Which store the visitor actually leaves for. Enhanced measurement already logs a
+     generic outbound click; this names it, so Google Play and the App Store can be told
+     apart and compared against where the traffic came from (utm_source=tiktok, etc.). -->
+<script>
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest ? e.target.closest('a[data-store]') : null;
+    if (!a || typeof gtag !== 'function') return;
+    gtag('event', 'store_click', {
+      store: a.getAttribute('data-store'),
+      link_url: a.href
+    });
+  });
+</script>
 </body>
 </html>
