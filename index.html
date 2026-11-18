@@ -229,22 +229,43 @@
 </style>
 
 <!-- Google Analytics 4 (property tappy-cat-revenue, web stream "Wizard Viking Studios site").
-     Consent Mode v2 defaults to denied, so GA4 sends cookieless pings: page views and
-     store-button clicks are counted, but no analytics or advertising cookie is set and
-     nothing is used for ad targeting. That keeps this page out of cookie-banner territory
-     for EU/UK visitors while still answering the only question it needs to answer:
-     how many people arrive, and how many tap through to a store. -->
+
+     Consent Mode v2, scoped by region. Advertising storage is denied EVERYWHERE — this
+     site does no remarketing and sets no advertising cookie, anywhere, for anyone.
+     Analytics storage is denied in the EEA, the UK and Switzerland, where consent would
+     be required, and granted elsewhere.
+
+     Why not deny analytics everywhere: with analytics_storage denied, GA4 sends
+     cookieless pings that feed behavioural MODELLING, and modelling only reports above a
+     traffic threshold this site will not reach for a long time. Realtime shows zero and
+     the reports stay empty. Denying everywhere would have been the privacy-maximal
+     choice and also a measurement that tells Ben nothing.
+
+     So: a visitor in the EEA/UK/CH is measured cookielessly (counted in aggregate, no
+     banner shown, no identifier stored). Everyone else gets a first-party _ga analytics
+     cookie and full reporting. No visitor, in any region, gets an advertising cookie. -->
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
+
+  // EEA + UK + Switzerland: cookieless.
   gtag('consent', 'default', {
     ad_storage: 'denied',
     ad_user_data: 'denied',
     ad_personalization: 'denied',
     analytics_storage: 'denied',
-    functionality_storage: 'granted',
-    security_storage: 'granted'
+    region: ['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IS','IE',
+             'IT','LV','LI','LT','LU','MT','NL','NO','PL','PT','RO','SK','SI','ES','SE',
+             'GB','CH']
   });
+  // Everywhere else: analytics only, still no advertising storage.
+  gtag('consent', 'default', {
+    ad_storage: 'denied',
+    ad_user_data: 'denied',
+    ad_personalization: 'denied',
+    analytics_storage: 'granted'
+  });
+
   gtag('js', new Date());
   gtag('config', 'G-XJ2EF0B4PF', { anonymize_ip: true });
 </script>
